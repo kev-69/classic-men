@@ -40,6 +40,13 @@ const messageStatusSchema = z.object({
   status: z.enum(["new", "read"])
 });
 
+const analyticsQuerySchema = z.object({
+  days: z
+    .enum(["7", "30"])
+    .optional()
+    .default("30")
+});
+
 const mapProduct = (row: Record<string, unknown>) => ({
   id: Number(row.id),
   name: String(row.name),
@@ -186,17 +193,73 @@ router.patch("/messages/:id", async (req, res) => {
   });
 });
 
-router.get("/analytics", async (_req, res) => {
-  const [counts, pageViews, productViews] = await Promise.all([
+router.get("/analytics", async (req, res) => {
+  const parsedQuery = analyticsQuerySchema.safeParse(req.query);
+  if (!parsedQuery.success) {
+    return res.status(400).json({ message: "Invalid analytics query params" });
+  }
+
+  const days = Number(parsedQuery.data.days);
+
+  const [counts, pageViews, productViews, pageBreakdownRows, productBreakdownRows] = await Promise.all([
     pool.query("SELECT COUNT(*)::int AS total FROM products"),
-    pool.query("SELECT COUNT(*)::int AS total FROM analytics_events WHERE event_type = 'PAGE_VIEW'"),
-    pool.query("SELECT COUNT(*)::int AS total FROM analytics_events WHERE event_type = 'PRODUCT_VIEW'")
+    pool.query(
+      "SELECT COUNT(*)::int AS total FROM analytics_events WHERE event_type = 'PAGE_VIEW' AND created_at >= NOW() - ($1 * INTERVAL '1 day')",
+      [days]
+    ),
+    pool.query(
+      "SELECT COUNT(*)::int AS total FROM analytics_events WHERE event_type = 'PRODUCT_VIEW' AND created_at >= NOW() - ($1 * INTERVAL '1 day')",
+      [days]
+    ),
+    pool.query(
+      `SELECT COALESCE(metadata->>'page', metadata->>'page_name', 'unknown') AS page, COUNT(*)::int AS views
+       FROM analytics_events
+       WHERE event_type = 'PAGE_VIEW'
+         AND created_at >= NOW() - ($1 * INTERVAL '1 day')
+       GROUP BY 1`,
+      [days]
+    ),
+    pool.query(
+      `SELECT
+          ae.product_id::int AS product_id,
+          COALESCE(p.name, CONCAT('Product #', ae.product_id::text)) AS product_name,
+          COUNT(*)::int AS views
+       FROM analytics_events ae
+       LEFT JOIN products p ON p.id = ae.product_id
+       WHERE ae.event_type = 'PRODUCT_VIEW'
+         AND ae.created_at >= NOW() - ($1 * INTERVAL '1 day')
+       GROUP BY ae.product_id, product_name
+       ORDER BY views DESC, product_name ASC
+       LIMIT 12`,
+      [days]
+    )
   ]);
 
+  const pageMap = new Map<string, number>();
+  for (const row of pageBreakdownRows.rows) {
+    const rawPage = String(row.page ?? "unknown").trim().toLowerCase();
+    const views = Number(row.views) || 0;
+    const normalizedPage = rawPage === "home" || rawPage === "products" || rawPage === "contact" ? rawPage : "other";
+    pageMap.set(normalizedPage, (pageMap.get(normalizedPage) ?? 0) + views);
+  }
+
+  const pageBreakdown = ["home", "products", "contact", "other"]
+    .map((page) => ({ page, views: pageMap.get(page) ?? 0 }))
+    .filter((item) => item.page !== "other" || item.views > 0);
+
+  const productBreakdown = productBreakdownRows.rows.map((row) => ({
+    productId: Number(row.product_id),
+    productName: String(row.product_name),
+    views: Number(row.views) || 0
+  }));
+
   return res.json({
+    days,
     productCount: counts.rows[0]?.total ?? 0,
     pageViews: pageViews.rows[0]?.total ?? 0,
-    productViews: productViews.rows[0]?.total ?? 0
+    productViews: productViews.rows[0]?.total ?? 0,
+    pageBreakdown,
+    productBreakdown
   });
 });
 
