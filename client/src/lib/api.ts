@@ -24,6 +24,8 @@ export type Product = {
 export type AppConfig = {
   whatsappNumber: string;
   metaPixelId: string;
+  landingVideoUrl: string;
+  homeStoryPhotoUrl: string;
   landingVideoPublicId: string;
   cloudinaryCloudName: string;
 };
