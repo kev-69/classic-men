@@ -2,19 +2,15 @@ import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import "./App.css";
 import { adminApi, uploadToCloudinary } from "./lib/api";
-import type { ContactMessage, Product, ProductMedia } from "./lib/api";
-
-type ProductDraft = {
-  name: string;
-  description: string;
-  price: string;
-  currency: string;
-  featured: boolean;
-  inStock: boolean;
-  colors: string;
-  sizes: string;
-  media: ProductMedia[];
-};
+import type { ContactMessage, Product } from "./lib/api";
+import { AuthView } from "./components/AuthView";
+import { DashboardHeader } from "./components/DashboardHeader";
+import { TabNavigation } from "./components/TabNavigation";
+import type { Tab } from "./components/TabNavigation";
+import { AnalyticsTab } from "./components/tabs/AnalyticsTab";
+import { MessagesTab } from "./components/tabs/MessagesTab";
+import { ProductsTab } from "./components/tabs/ProductsTab";
+import type { AnalyticsSummary, ProductDraft } from "./components/tabs/types";
 
 const emptyDraft: ProductDraft = {
   name: "",
@@ -30,15 +26,13 @@ const emptyDraft: ProductDraft = {
 
 const TOKEN_KEY = "classic-men-admin-token";
 
-type Tab = "products" | "messages" | "analytics";
-
 function App() {
   const [tab, setTab] = useState<Tab>("products");
   const [token, setToken] = useState<string>(() => localStorage.getItem(TOKEN_KEY) ?? "");
   const [password, setPassword] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
-  const [analytics, setAnalytics] = useState({ productCount: 0, pageViews: 0, productViews: 0 });
+  const [analytics, setAnalytics] = useState<AnalyticsSummary>({ productCount: 0, pageViews: 0, productViews: 0 });
   const [draft, setDraft] = useState<ProductDraft>(emptyDraft);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [mediaUrl, setMediaUrl] = useState("");
@@ -250,255 +244,54 @@ function App() {
 
   if (!token) {
     return (
-      <main className="auth-shell">
-        <form className="auth-card" onSubmit={onLogin}>
-          <p className="eyebrow">Classic-Men</p>
-          <h1>Admin Dashboard</h1>
-          <p>Use your admin password to manage products and contact messages.</p>
-          <label>
-            Password
-            <input
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              placeholder="Enter admin password"
-              required
-            />
-          </label>
-          <button type="submit" disabled={isLoading}>
-            {isLoading ? "Signing in..." : "Login"}
-          </button>
-          <small>{statusMessage}</small>
-        </form>
-      </main>
+      <AuthView
+        password={password}
+        setPassword={setPassword}
+        isLoading={isLoading}
+        statusMessage={statusMessage}
+        onLogin={onLogin}
+      />
     );
   }
 
   return (
     <main className="dashboard-shell">
-      <header className="dashboard-header">
-        <div>
-          <p className="eyebrow">Classic-Men</p>
-          <h1>Admin Control Center</h1>
-          <p>Manage products, uploads, messages, and brand analytics.</p>
-        </div>
-        <div className="header-actions">
-          <button onClick={() => void hydrateDashboard(token)} disabled={isLoading}>
-            Refresh
-          </button>
-          <button className="ghost" onClick={logout}>
-            Logout
-          </button>
-        </div>
-      </header>
+      <DashboardHeader isLoading={isLoading} onRefresh={() => void hydrateDashboard(token)} onLogout={logout} />
 
-      <nav className="tab-nav">
-        <button className={tab === "products" ? "active" : ""} onClick={() => setTab("products")}>
-          Products
-        </button>
-        <button className={tab === "messages" ? "active" : ""} onClick={() => setTab("messages")}>
-          Messages
-        </button>
-        <button className={tab === "analytics" ? "active" : ""} onClick={() => setTab("analytics")}>
-          Analytics
-        </button>
-      </nav>
+      <TabNavigation tab={tab} onTabChange={setTab} />
 
       <p className="status">{statusMessage}</p>
 
       {tab === "products" && (
-        <section className="grid-two">
-          <form className="panel" onSubmit={onSubmitProduct}>
-            <h2>{editingId ? "Edit product" : "Create product"}</h2>
-            <label>
-              Name
-              <input
-                value={draft.name}
-                onChange={(event) => setDraft((prev) => ({ ...prev, name: event.target.value }))}
-                required
-              />
-            </label>
-            <label>
-              Description
-              <textarea
-                value={draft.description}
-                onChange={(event) => setDraft((prev) => ({ ...prev, description: event.target.value }))}
-                rows={5}
-                required
-              />
-            </label>
-            <div className="row">
-              <label>
-                Price
-                <input
-                  type="number"
-                  min="1"
-                  step="0.01"
-                  value={draft.price}
-                  onChange={(event) => setDraft((prev) => ({ ...prev, price: event.target.value }))}
-                  required
-                />
-              </label>
-              <label>
-                Currency
-                <input
-                  value={draft.currency}
-                  onChange={(event) => setDraft((prev) => ({ ...prev, currency: event.target.value }))}
-                />
-              </label>
-            </div>
-            <label>
-              Colors (comma separated)
-              <input
-                value={draft.colors}
-                onChange={(event) => setDraft((prev) => ({ ...prev, colors: event.target.value }))}
-              />
-            </label>
-            <label>
-              Sizes (comma separated)
-              <input
-                value={draft.sizes}
-                onChange={(event) => setDraft((prev) => ({ ...prev, sizes: event.target.value }))}
-              />
-            </label>
-            <div className="row toggle-row">
-              <label className="toggle">
-                <input
-                  type="checkbox"
-                  checked={draft.featured}
-                  onChange={(event) => setDraft((prev) => ({ ...prev, featured: event.target.checked }))}
-                />
-                Featured
-              </label>
-              <label className="toggle">
-                <input
-                  type="checkbox"
-                  checked={draft.inStock}
-                  onChange={(event) => setDraft((prev) => ({ ...prev, inStock: event.target.checked }))}
-                />
-                In stock
-              </label>
-            </div>
-
-            <div className="media-controls">
-              <h3>Media</h3>
-              <div className="row">
-                <input
-                  value={mediaUrl}
-                  onChange={(event) => setMediaUrl(event.target.value)}
-                  placeholder="Paste image/video URL"
-                />
-                <button type="button" onClick={addManualMedia}>
-                  Add URL
-                </button>
-              </div>
-              <label className="upload-field">
-                Upload with Cloudinary
-                <input type="file" accept="image/*,video/*" onChange={(event) => void onUploadMedia(event.target.files?.[0] ?? null)} />
-              </label>
-              <ul className="media-list">
-                {draft.media.map((item, index) => (
-                  <li key={`${item.url}-${index}`}>
-                    <span>{item.type.toUpperCase()}</span>
-                    <a href={item.url} target="_blank" rel="noreferrer">
-                      Open
-                    </a>
-                    <button type="button" className="ghost" onClick={() => removeMedia(index)}>
-                      Remove
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="row">
-              <button type="submit" disabled={isLoading}>
-                {editingId ? "Save Changes" : "Create Product"}
-              </button>
-              {editingId && (
-                <button
-                  type="button"
-                  className="ghost"
-                  onClick={() => {
-                    setEditingId(null);
-                    setDraft(emptyDraft);
-                  }}
-                >
-                  Cancel Edit
-                </button>
-              )}
-            </div>
-          </form>
-
-          <section className="panel">
-            <h2>Product Inventory</h2>
-            <ul className="list">
-              {products.map((product) => (
-                <li key={product.id}>
-                  <div>
-                    <p>{product.name}</p>
-                    <small>
-                      {product.currency} {product.price.toFixed(2)} • {product.inStock ? "In stock" : "Out of stock"}
-                    </small>
-                  </div>
-                  <div className="actions">
-                    <button type="button" className="ghost" onClick={() => startEdit(product)}>
-                      Edit
-                    </button>
-                    <button type="button" className="danger" onClick={() => void onDeleteProduct(product.id)}>
-                      Delete
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </section>
-        </section>
+        <ProductsTab
+          isLoading={isLoading}
+          editingId={editingId}
+          draft={draft}
+          mediaUrl={mediaUrl}
+          products={products}
+          setDraft={setDraft}
+          setMediaUrl={setMediaUrl}
+          onSubmitProduct={onSubmitProduct}
+          onAddManualMedia={addManualMedia}
+          onUploadMedia={onUploadMedia}
+          onRemoveMedia={removeMedia}
+          onStartEdit={startEdit}
+          onDeleteProduct={(id) => void onDeleteProduct(id)}
+          onCancelEdit={() => {
+            setEditingId(null);
+            setDraft(emptyDraft);
+          }}
+        />
       )}
 
       {tab === "messages" && (
-        <section className="panel">
-          <h2>Contact messages</h2>
-          <ul className="list messages">
-            {sortedMessages.map((message) => (
-              <li key={message.id}>
-                <div>
-                  <p>
-                    {message.name} • {new Date(message.createdAt).toLocaleString()}
-                  </p>
-                  <small>{message.message}</small>
-                </div>
-                <div className="actions">
-                  <button
-                    type="button"
-                    className="ghost"
-                    onClick={() => void updateMessageStatus(message.id, message.status === "new" ? "read" : "new")}
-                  >
-                    Mark as {message.status === "new" ? "read" : "new"}
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
+        <MessagesTab
+          sortedMessages={sortedMessages}
+          onUpdateMessageStatus={(id, status) => void updateMessageStatus(id, status)}
+        />
       )}
 
-      {tab === "analytics" && (
-        <section className="analytics-grid">
-          <article className="panel metric">
-            <h2>Products</h2>
-            <p>{analytics.productCount}</p>
-          </article>
-          <article className="panel metric">
-            <h2>Page Views</h2>
-            <p>{analytics.pageViews}</p>
-          </article>
-          <article className="panel metric">
-            <h2>Product Views</h2>
-            <p>{analytics.productViews}</p>
-          </article>
-        </section>
-      )}
+      {tab === "analytics" && <AnalyticsTab analytics={analytics} />}
     </main>
   );
 }
