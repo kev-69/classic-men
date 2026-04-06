@@ -32,7 +32,13 @@ function App() {
   const [password, setPassword] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
-  const [analytics, setAnalytics] = useState<AnalyticsSummary>({ productCount: 0, pageViews: 0, productViews: 0 });
+  const [analytics, setAnalytics] = useState<AnalyticsSummary>({
+    productCount: 0,
+    pageViews: 0,
+    productViews: 0,
+    pageBreakdown: [],
+    productBreakdown: []
+  });
   const [draft, setDraft] = useState<ProductDraft>(emptyDraft);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [mediaUrl, setMediaUrl] = useState("");
