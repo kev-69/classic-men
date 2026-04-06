@@ -413,6 +413,15 @@ button.danger {
   font-weight: 700;
 }
 
+.home-content-panel {
+  max-width: 900px;
+}
+
+.home-content-grid {
+  display: grid;
+  gap: 0.9rem;
+}
+
 small {
   color: var(--ink-soft);
 }
