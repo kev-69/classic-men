@@ -1,4 +1,4 @@
-export type Tab = "products" | "messages" | "analytics";
+export type Tab = "products" | "messages" | "analytics" | "home-content";
 
 type TabNavigationProps = {
   tab: Tab;
@@ -16,6 +16,9 @@ export function TabNavigation({ tab, onTabChange }: TabNavigationProps) {
       </button>
       <button className={tab === "messages" ? "active" : ""} onClick={() => onTabChange("messages")}>
         Messages
+      </button>
+      <button className={tab === "home-content" ? "active" : ""} onClick={() => onTabChange("home-content")}>
+        Home Content
       </button>
     </nav>
   );
