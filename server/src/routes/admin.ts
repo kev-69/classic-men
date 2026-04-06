@@ -47,6 +47,11 @@ const analyticsQuerySchema = z.object({
     .default("30")
 });
 
+const homeContentSchema = z.object({
+  landingVideoUrl: z.string().url().or(z.literal("")),
+  storyImageUrl: z.string().url().or(z.literal(""))
+});
+
 const mapProduct = (row: Record<string, unknown>) => ({
   id: Number(row.id),
   name: String(row.name),
@@ -260,6 +265,50 @@ router.get("/analytics", async (req, res) => {
     productViews: productViews.rows[0]?.total ?? 0,
     pageBreakdown,
     productBreakdown
+  });
+});
+
+router.get("/home-content", async (_req, res) => {
+  const result = await pool.query(
+    "SELECT landing_video_url, story_image_url, updated_at FROM home_content WHERE id = 1 LIMIT 1"
+  );
+  const row = result.rows[0] as
+    | {
+        landing_video_url?: string;
+        story_image_url?: string;
+        updated_at?: string;
+      }
+    | undefined;
+
+  return res.json({
+    landingVideoUrl: row?.landing_video_url ?? "",
+    storyImageUrl: row?.story_image_url ?? "",
+    updatedAt: row?.updated_at ? new Date(String(row.updated_at)).toISOString() : null
+  });
+});
+
+router.put("/home-content", async (req, res) => {
+  const parsed = homeContentSchema.safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ message: "Invalid home content payload", errors: parsed.error.flatten() });
+  }
+
+  const { landingVideoUrl, storyImageUrl } = parsed.data;
+  const result = await pool.query(
+    `UPDATE home_content
+     SET landing_video_url = $1,
+         story_image_url = $2,
+         updated_at = NOW()
+     WHERE id = 1
+     RETURNING landing_video_url, story_image_url, updated_at`,
+    [landingVideoUrl, storyImageUrl]
+  );
+
+  const row = result.rows[0] as { landing_video_url: string; story_image_url: string; updated_at: string };
+  return res.json({
+    landingVideoUrl: row.landing_video_url,
+    storyImageUrl: row.story_image_url,
+    updatedAt: new Date(row.updated_at).toISOString()
   });
 });
 
