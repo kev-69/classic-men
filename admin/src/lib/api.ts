@@ -37,6 +37,12 @@ export type AnalyticsResponse = {
   productBreakdown: Array<{ productId: number; productName: string; views: number }>;
 };
 
+export type HomeContent = {
+  landingVideoUrl: string;
+  storyImageUrl: string;
+  updatedAt: string | null;
+};
+
 type CloudinarySignature = {
   timestamp: number;
   folder: string;
@@ -139,6 +145,27 @@ export const adminApi = {
     });
 
     return parseJson<AnalyticsResponse>(response);
+  },
+
+  async getHomeContent(token: string) {
+    const response = await fetch(`${API_BASE}/admin/home-content`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    return parseJson<HomeContent>(response);
+  },
+
+  async updateHomeContent(token: string, payload: { landingVideoUrl: string; storyImageUrl: string }) {
+    const response = await fetch(`${API_BASE}/admin/home-content`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(payload)
+    });
+
+    return parseJson<HomeContent>(response);
   },
 
   async getCloudinarySignature(token: string) {
