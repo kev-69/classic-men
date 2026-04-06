@@ -29,6 +29,14 @@ export type ContactMessage = {
   createdAt: string;
 };
 
+export type AnalyticsResponse = {
+  productCount: number;
+  pageViews: number;
+  productViews: number;
+  pageBreakdown: Array<{ page: string; views: number }>;
+  productBreakdown: Array<{ productId: number; productName: string; views: number }>;
+};
+
 type CloudinarySignature = {
   timestamp: number;
   folder: string;
@@ -130,7 +138,7 @@ export const adminApi = {
       headers: { Authorization: `Bearer ${token}` }
     });
 
-    return parseJson<{ productCount: number; pageViews: number; productViews: number }>(response);
+    return parseJson<AnalyticsResponse>(response);
   },
 
   async getCloudinarySignature(token: string) {
