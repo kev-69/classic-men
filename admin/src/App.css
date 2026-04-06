@@ -234,6 +234,180 @@ button.danger {
   gap: 1rem;
 }
 
+.analytics-layout {
+  display: grid;
+  gap: 1rem;
+}
+
+.analytics-chart-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 1rem;
+}
+
+.analytics-chart-panel {
+  align-content: start;
+}
+
+.analytics-chart-wrap {
+  width: 100%;
+  height: 280px;
+}
+
+.donut-wrap {
+  height: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.analytics-note {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.analytics-bars {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.analytics-bar-row {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.analytics-bar-meta {
+  display: flex;
+  justify-content: space-between;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.analytics-bar-meta strong {
+  color: var(--ink);
+}
+
+.analytics-label-cap {
+  text-transform: capitalize;
+}
+
+.analytics-bar-track {
+  width: 100%;
+  height: 12px;
+  background: #ece6d9;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.analytics-bar-fill {
+  height: 100%;
+  border-radius: inherit;
+  transition: width 0.4s ease;
+}
+
+.analytics-donut {
+  width: 220px;
+  height: 220px;
+}
+
+.analytics-donut-text-primary {
+  fill: var(--ink);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.analytics-donut-text-secondary {
+  fill: var(--ink-soft);
+  font-size: 12px;
+}
+
+.analytics-legend {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.legend-item i {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.product-axis-chart {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 0.6rem;
+  align-items: end;
+}
+
+.y-axis-labels {
+  display: grid;
+  height: 210px;
+  align-content: space-between;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  text-align: right;
+  padding-bottom: 1.2rem;
+}
+
+.axis-plot-area {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(52px, 1fr);
+  gap: 0.55rem;
+  border-left: 1px solid #d7d1c4;
+  border-bottom: 1px solid #d7d1c4;
+  padding: 0.4rem 0.45rem 0.2rem;
+  min-height: 240px;
+  overflow-x: auto;
+}
+
+.axis-bar-column {
+  display: grid;
+  grid-template-rows: 170px auto auto;
+  align-content: end;
+  gap: 0.25rem;
+}
+
+.axis-bar-track {
+  position: relative;
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(to top, #f1ece1, #faf7f0);
+  overflow: hidden;
+}
+
+.axis-bar-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(180deg, #2f7269, #1e4d46);
+  border-radius: 8px 8px 0 0;
+  transition: height 0.35s ease;
+}
+
+.axis-bar-value {
+  text-align: center;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.axis-x-label {
+  display: inline-block;
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .metric p {
   font-size: 2rem;
   font-weight: 700;
@@ -246,6 +420,7 @@ small {
 @media (max-width: 900px) {
   .grid-two,
   .analytics-grid,
+  .analytics-chart-grid,
   .row {
     grid-template-columns: 1fr;
   }
