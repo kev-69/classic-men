@@ -42,4 +42,19 @@ export const initializeDatabase = async () => {
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
   `);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS home_content (
+      id SMALLINT PRIMARY KEY,
+      landing_video_url TEXT NOT NULL DEFAULT '',
+      story_image_url TEXT NOT NULL DEFAULT '',
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `);
+
+  await pool.query(`
+    INSERT INTO home_content (id)
+    VALUES (1)
+    ON CONFLICT (id) DO NOTHING;
+  `);
 };
