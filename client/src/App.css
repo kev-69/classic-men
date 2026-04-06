@@ -140,11 +140,142 @@ button.ghost {
   margin-top: 1rem;
 }
 
+.home-highlights {
+  margin-top: 1.1rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.home-highlights article {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0.9rem;
+}
+
+.home-highlights h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.home-highlights p {
+  margin: 0.35rem 0 0;
+  color: var(--ink-soft);
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  font-size: 0.9rem;
+}
+
+.home-story {
+  margin-top: 1.3rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+}
+
+.home-story-photo img {
+  width: 100%;
+  border-radius: var(--radius);
+  object-fit: cover;
+  max-height: 300px;
+}
+
+.home-story-main,
+.home-process,
+.home-story-grid article {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.home-story-main {
+  padding: 1rem;
+}
+
+.home-story-main h2,
+.home-process h2 {
+  margin: 0.4rem 0 0.7rem;
+}
+
+.home-story-main p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-family: "Manrope", "Segoe UI", sans-serif;
+}
+
+.home-story-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.home-story-grid article {
+  padding: 0.9rem;
+}
+
+.home-story-grid h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.home-story-grid p {
+  margin: 0.35rem 0 0;
+  color: var(--ink-soft);
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  font-size: 0.88rem;
+}
+
+.home-process {
+  margin-top: 1.2rem;
+  padding: 1rem;
+  background: linear-gradient(165deg, #faf7f0, #f1ebdf 70%);
+}
+
+.home-process-grid {
+  margin-top: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.home-process-grid article {
+  border: 1px dashed #cec2ad;
+  border-radius: 12px;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.home-process-grid span {
+  display: inline-flex;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.76rem;
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  font-weight: 700;
+  background: var(--ink);
+  color: #fff;
+}
+
+.home-process-grid h3 {
+  margin: 0.45rem 0 0;
+  font-size: 0.94rem;
+}
+
+.home-process-grid p {
+  margin: 0.25rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+  font-family: "Manrope", "Segoe UI", sans-serif;
+}
+
 .video-card {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   overflow: hidden;
-  min-height: 280px;
+  max-height: 400px;
   background: #111;
   display: grid;
 }
@@ -245,6 +376,54 @@ select {
   gap: 0.9rem;
 }
 
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 1rem;
+}
+
+.contact-main form {
+  margin-top: 0.4rem;
+}
+
+.contact-side {
+  display: grid;
+  gap: 1rem;
+}
+
+.contact-info h3 {
+  margin: 0;
+}
+
+.contact-list,
+.contact-steps {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+  color: var(--ink-soft);
+  font-family: "Manrope", "Segoe UI", sans-serif;
+}
+
+.contact-list {
+  list-style: none;
+}
+
+.contact-list li {
+  display: grid;
+  gap: 0.1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px dashed #e7ddcd;
+}
+
+.contact-list li strong {
+  color: var(--ink);
+}
+
+.contact-steps {
+  padding-left: 1.2rem;
+}
+
 .contact-card form {
   display: grid;
   gap: 0.7rem;
@@ -266,7 +445,7 @@ label {
 }
 
 .modal {
-  width: min(1000px, 100%);
+  width: min(980px, 100%);
   max-height: 90vh;
   overflow: auto;
   background: var(--surface);
@@ -292,11 +471,62 @@ label {
   gap: 0.7rem;
 }
 
-.modal-media img,
-.modal-media video {
+.modal-media-zone {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.modal-main-media {
   width: 100%;
-  border-radius: 12px;
+  aspect-ratio: 4 / 3;
   border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #f6f2e8;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.modal-main-media img,
+.modal-main-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.modal-thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
+  gap: 0.5rem;
+}
+
+.modal-thumb {
+  border: 1px solid var(--line);
+  background: #f9f5ec;
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 0;
+  min-height: 74px;
+  display: grid;
+  place-items: center;
+}
+
+.modal-thumb img {
+  width: 100%;
+  height: 100%;
+  
+  object-fit: cover;
+}
+
+.modal-thumb.active {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.thumb-video-label {
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  font-family: "Manrope", "Segoe UI", sans-serif;
 }
 
 .price-tag {
@@ -316,19 +546,55 @@ label {
   font-family: "Manrope", "Segoe UI", sans-serif;
 }
 
-footer {
-  border-top: 1px solid var(--line);
-  padding: 0.9rem 1rem;
+.footer {
+  background-color: #f0f0f0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
-footer small {
-  color: var(--ink-soft);
-  font-family: "Manrope", "Segoe UI", sans-serif;
+.social-icons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.social-icon {
+  color: #333; /* Dark color for better visibility on light background */
+  transition: color 0.3s ease, transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-icon:hover {
+  color: #1f9d59; /* Your brand color */
+  transform: translateY(-3px);
+}
+
+.tiktok-icon {
+  color: white;
+}
+
+.social-icon:hover .tiktok-icon {
+  color: #1f9d59;
 }
 
 @media (max-width: 980px) {
   .hero,
-  .modal-layout {
+  .modal-layout,
+  .contact-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .home-highlights,
+  .home-process-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .home-story {
     grid-template-columns: 1fr;
   }
 
@@ -354,6 +620,12 @@ footer small {
   }
 
   .product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-highlights,
+  .home-story-grid,
+  .home-process-grid {
     grid-template-columns: 1fr;
   }
 
