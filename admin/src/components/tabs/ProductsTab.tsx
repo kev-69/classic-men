@@ -23,12 +23,9 @@ export function ProductsTab({
   isLoading,
   editingId,
   draft,
-  mediaUrl,
   products,
   setDraft,
-  setMediaUrl,
   onSubmitProduct,
-  onAddManualMedia,
   onUploadMedia,
   onRemoveMedia,
   onStartEdit,
@@ -38,7 +35,7 @@ export function ProductsTab({
   return (
     <section className="grid-two">
       <form className="panel" onSubmit={onSubmitProduct}>
-        <h2>{editingId ? "Edit product" : "Create product"}</h2>
+        <h2>{editingId ? "Edit" : "Add New"}</h2>
         <label>
           Name
           <input
@@ -110,19 +107,9 @@ export function ProductsTab({
         </div>
 
         <div className="media-controls">
-          <h3>Media</h3>
-          <div className="row">
-            <input
-              value={mediaUrl}
-              onChange={(event) => setMediaUrl(event.target.value)}
-              placeholder="Paste image/video URL"
-            />
-            <button type="button" onClick={onAddManualMedia}>
-              Add URL
-            </button>
-          </div>
+          <h3>Photos</h3>
           <label className="upload-field">
-            Upload with Cloudinary
+            Upload product pictures
             <input
               type="file"
               accept="image/*,video/*"
@@ -146,7 +133,7 @@ export function ProductsTab({
 
         <div className="row">
           <button type="submit" disabled={isLoading}>
-            {editingId ? "Save Changes" : "Create Product"}
+            {editingId ? "Save" : "Add"}
           </button>
           {editingId && (
             <button type="button" className="ghost" onClick={onCancelEdit}>
@@ -157,7 +144,7 @@ export function ProductsTab({
       </form>
 
       <section className="panel">
-        <h2>Product Inventory</h2>
+        <h2>Inventory</h2>
         <ul className="list">
           {products.map((product) => (
             <li key={product.id}>
