@@ -4,12 +4,19 @@ import "./App.css";
 import { clientApi } from "./lib/api";
 import type { AppConfig, Product } from "./lib/api";
 import { initMetaPixel, trackPixelEvent } from "./lib/pixel";
+import { SiteFooter } from "./components/layout/SiteFooter";
+import { ProductModal } from "./components/modals/ProductModal";
+import { ContactPage } from "./components/pages/ContactPage";
+import { HomePage } from "./components/pages/HomePage";
+import { ProductsPage } from "./components/pages/ProductsPage";
 
 type Page = "home" | "products" | "contact";
 
 const defaultConfig: AppConfig = {
   whatsappNumber: "233000000000",
   metaPixelId: "",
+  landingVideoUrl: "",
+  homeStoryPhotoUrl: "",
   landingVideoPublicId: "",
   cloudinaryCloudName: ""
 };
@@ -23,7 +30,7 @@ function App() {
   const [selectedSize, setSelectedSize] = useState("");
   const [contactName, setContactName] = useState("");
   const [contactMessage, setContactMessage] = useState("");
-  const [statusMessage, setStatusMessage] = useState("Welcome to Classic-Men");
+  const [, setStatusMessage] = useState("");
   const [config, setConfig] = useState<AppConfig>(defaultConfig);
 
   useEffect(() => {
@@ -113,9 +120,10 @@ function App() {
   };
 
   const landingVideoUrl =
-    config.cloudinaryCloudName && config.landingVideoPublicId
+    config.landingVideoUrl ||
+    (config.cloudinaryCloudName && config.landingVideoPublicId
       ? `https://res.cloudinary.com/${config.cloudinaryCloudName}/video/upload/${config.landingVideoPublicId}.mp4`
-      : "";
+      : "");
 
   return (
     <div className="site-shell">
@@ -135,171 +143,49 @@ function App() {
       </header>
 
       {page === "home" && (
-        <main className="page home-page">
-          <section className="hero">
-            <div>
-              <p className="eyebrow">Premium Menswear</p>
-              <h1>Timeless Style for Modern Men</h1>
-              <p>
-                Discover signature attire crafted with premium fabrics and sharp silhouettes. Browse, choose your
-                style, and place your order directly via WhatsApp.
-              </p>
-              <div className="hero-actions">
-                <button onClick={() => setPage("products")}>View Products</button>
-                <button className="ghost" onClick={() => setPage("contact")}>
-                  Contact
-                </button>
-              </div>
-            </div>
-            <div className="video-card">
-              {landingVideoUrl ? (
-                <video autoPlay muted loop playsInline controls>
-                  <source src={landingVideoUrl} type="video/mp4" />
-                </video>
-              ) : (
-                <div className="video-placeholder">Upload your how-to-order video in admin</div>
-              )}
-            </div>
-          </section>
-
-          <section className="featured">
-            <div className="section-head">
-              <h2>Featured Collection</h2>
-              <button className="ghost" onClick={() => setPage("products")}>Explore all</button>
-            </div>
-            <div className="product-grid">
-              {featuredProducts.map((product) => (
-                <article key={product.id} className="product-card">
-                  <img src={product.media[0]?.url || "https://placehold.co/640x420?text=Classic-Men"} alt={product.name} />
-                  <div>
-                    <h3>{product.name}</h3>
-                    <p>
-                      {product.currency} {product.price.toFixed(2)}
-                    </p>
-                  </div>
-                  <button onClick={() => void openProductView(product.id)}>View</button>
-                </article>
-              ))}
-            </div>
-          </section>
-        </main>
+        <HomePage
+          landingVideoUrl={landingVideoUrl}
+          storyPhotoUrl={config.homeStoryPhotoUrl}
+          featuredProducts={featuredProducts}
+          onViewProducts={() => setPage("products")}
+          onExploreAll={() => setPage("products")}
+          onOpenProductView={(id) => void openProductView(id)}
+        />
       )}
 
       {page === "products" && (
-        <main className="page products-page">
-          <section className="section-head products-head">
-            <div>
-              <h2>Products</h2>
-              <p>Search and filter by style, color, or item name.</p>
-            </div>
-            <input
-              placeholder="Search products"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-            />
-          </section>
-          <div className="product-grid">
-            {visibleProducts.map((product) => (
-              <article key={product.id} className="product-card">
-                <img src={product.media[0]?.url || "https://placehold.co/640x420?text=Classic-Men"} alt={product.name} />
-                <div>
-                  <h3>{product.name}</h3>
-                  <p>
-                    {product.currency} {product.price.toFixed(2)}
-                  </p>
-                  <small>{product.inStock ? "In stock" : "Out of stock"}</small>
-                </div>
-                <button onClick={() => void openProductView(product.id)}>View</button>
-              </article>
-            ))}
-          </div>
-        </main>
+        <ProductsPage
+          query={query}
+          visibleProducts={visibleProducts}
+          onQueryChange={setQuery}
+          onOpenProductView={(id) => void openProductView(id)}
+        />
       )}
 
       {page === "contact" && (
-        <main className="page contact-page">
-          <section className="contact-card">
-            <h2>Contact Classic-Men</h2>
-            <p>Need help with sizes, stock, or delivery? Send us a quick message.</p>
-            <form onSubmit={submitContact}>
-              <label>
-                Name
-                <input value={contactName} onChange={(event) => setContactName(event.target.value)} required />
-              </label>
-              <label>
-                Message
-                <textarea
-                  rows={6}
-                  value={contactMessage}
-                  onChange={(event) => setContactMessage(event.target.value)}
-                  required
-                />
-              </label>
-              <button type="submit">Send Message</button>
-            </form>
-          </section>
-        </main>
+        <ContactPage
+          contactName={contactName}
+          contactMessage={contactMessage}
+          whatsappNumber={config.whatsappNumber}
+          onContactNameChange={setContactName}
+          onContactMessageChange={setContactMessage}
+          onSubmitContact={submitContact}
+        />
       )}
 
       {selectedProduct && (
-        <div className="modal-backdrop" onClick={() => setSelectedProduct(null)}>
-          <section className="modal" onClick={(event) => event.stopPropagation()}>
-            <button className="close" onClick={() => setSelectedProduct(null)}>
-              Close
-            </button>
-            <div className="modal-layout">
-              <div className="modal-media">
-                {selectedProduct.media.map((item) =>
-                  item.type === "video" ? (
-                    <video key={item.url} controls>
-                      <source src={item.url} />
-                    </video>
-                  ) : (
-                    <img key={item.url} src={item.url} alt={selectedProduct.name} />
-                  )
-                )}
-              </div>
-              <div className="modal-content">
-                <h3>{selectedProduct.name}</h3>
-                <p>{selectedProduct.description}</p>
-                <p className="price-tag">
-                  {selectedProduct.currency} {selectedProduct.price.toFixed(2)}
-                </p>
-
-                <label>
-                  Color
-                  <select value={selectedColor} onChange={(event) => setSelectedColor(event.target.value)}>
-                    {selectedProduct.colors.map((color) => (
-                      <option key={color} value={color}>
-                        {color}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <label>
-                  Size
-                  <select value={selectedSize} onChange={(event) => setSelectedSize(event.target.value)}>
-                    {selectedProduct.sizes.map((size) => (
-                      <option key={size} value={size}>
-                        {size}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <a className="whatsapp" href={buildWhatsAppOrderLink()} target="_blank" rel="noreferrer">
-                  Order via WhatsApp
-                </a>
-              </div>
-            </div>
-          </section>
-        </div>
+        <ProductModal
+          product={selectedProduct}
+          selectedColor={selectedColor}
+          selectedSize={selectedSize}
+          whatsappHref={buildWhatsAppOrderLink()}
+          onClose={() => setSelectedProduct(null)}
+          onSelectColor={setSelectedColor}
+          onSelectSize={setSelectedSize}
+        />
       )}
 
-      <footer>
-        <small>{statusMessage}</small>
-      </footer>
+      <SiteFooter/>
     </div>
   );
 }
