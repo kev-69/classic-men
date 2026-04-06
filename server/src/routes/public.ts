@@ -94,10 +94,17 @@ router.post("/contact", async (req, res) => {
   return res.status(201).json({ message: "Message received" });
 });
 
-router.get("/config", (_req, res) => {
+router.get("/config", async (_req, res) => {
+  const homeContent = await pool.query(
+    "SELECT landing_video_url, story_image_url FROM home_content WHERE id = 1 LIMIT 1"
+  );
+  const row = homeContent.rows[0] as { landing_video_url?: string; story_image_url?: string } | undefined;
+
   return res.json({
     whatsappNumber: env.WHATSAPP_NUMBER,
     metaPixelId: env.META_PIXEL_ID,
+    landingVideoUrl: row?.landing_video_url ?? "",
+    homeStoryPhotoUrl: row?.story_image_url ?? "",
     landingVideoPublicId: env.CLOUDINARY_VIDEO_PUBLIC_ID,
     cloudinaryCloudName: env.CLOUDINARY_CLOUD_NAME
   });
