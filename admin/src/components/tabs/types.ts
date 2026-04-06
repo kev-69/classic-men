@@ -16,4 +16,6 @@ export type AnalyticsSummary = {
   productCount: number;
   pageViews: number;
   productViews: number;
+  pageBreakdown: Array<{ page: string; views: number }>;
+  productBreakdown: Array<{ productId: number; productName: string; views: number }>;
 };
