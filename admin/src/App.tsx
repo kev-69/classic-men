@@ -8,6 +8,7 @@ import { DashboardHeader } from "./components/DashboardHeader";
 import { TabNavigation } from "./components/TabNavigation";
 import type { Tab } from "./components/TabNavigation";
 import { AnalyticsTab } from "./components/tabs/AnalyticsTab";
+import { HomeContentTab } from "./components/tabs/HomeContentTab";
 import { MessagesTab } from "./components/tabs/MessagesTab";
 import { ProductsTab } from "./components/tabs/ProductsTab";
 import type { AnalyticsSummary, ProductDraft } from "./components/tabs/types";
@@ -27,7 +28,7 @@ const emptyDraft: ProductDraft = {
 const TOKEN_KEY = "classic-men-admin-token";
 
 function App() {
-  const [tab, setTab] = useState<Tab>("products");
+  const [tab, setTab] = useState<Tab>("analytics");
   const [token, setToken] = useState<string>(() => localStorage.getItem(TOKEN_KEY) ?? "");
   const [password, setPassword] = useState("");
   const [products, setProducts] = useState<Product[]>([]);
@@ -44,6 +45,9 @@ function App() {
   const [mediaUrl, setMediaUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState("Ready");
+  const [landingVideoUrl, setLandingVideoUrl] = useState("");
+  const [storyImageUrl, setStoryImageUrl] = useState("");
+  const [homeContentUpdatedAt, setHomeContentUpdatedAt] = useState<string | null>(null);
 
   const sortedMessages = useMemo(
     () => [...messages].sort((a, b) => Number(a.status === "new") - Number(b.status === "new")).reverse(),
@@ -68,10 +72,14 @@ function App() {
         adminApi.getMessages(authToken),
         adminApi.getAnalytics(authToken)
       ]);
+      const homeContent = await adminApi.getHomeContent(authToken);
 
       setProducts(productRows);
       setMessages(messageRows);
       setAnalytics(analyticsData);
+      setLandingVideoUrl(homeContent.landingVideoUrl);
+      setStoryImageUrl(homeContent.storyImageUrl);
+      setHomeContentUpdatedAt(homeContent.updatedAt);
       setStatusMessage("Dashboard synced");
     } catch (error) {
       setStatusMessage(error instanceof Error ? error.message : "Failed to load dashboard");
@@ -228,6 +236,54 @@ function App() {
     }));
   };
 
+  const onUploadHomeAsset = async (file: File | null, kind: "video" | "image") => {
+    if (!token || !file) {
+      return;
+    }
+
+    setIsLoading(true);
+    setStatusMessage(`Uploading ${file.name}...`);
+
+    try {
+      const uploaded = await uploadToCloudinary(token, file);
+      if (kind === "video") {
+        setLandingVideoUrl(uploaded.url);
+      } else {
+        setStoryImageUrl(uploaded.url);
+      }
+      setStatusMessage("Upload complete. Save changes to publish.");
+    } catch (error) {
+      setStatusMessage(error instanceof Error ? error.message : "Upload failed");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const onSaveHomeContent = async (event: FormEvent) => {
+    event.preventDefault();
+    if (!token) {
+      return;
+    }
+
+    setIsLoading(true);
+    setStatusMessage("Saving home content...");
+
+    try {
+      const updated = await adminApi.updateHomeContent(token, {
+        landingVideoUrl: landingVideoUrl.trim(),
+        storyImageUrl: storyImageUrl.trim()
+      });
+      setLandingVideoUrl(updated.landingVideoUrl);
+      setStoryImageUrl(updated.storyImageUrl);
+      setHomeContentUpdatedAt(updated.updatedAt);
+      setStatusMessage("Home content updated");
+    } catch (error) {
+      setStatusMessage(error instanceof Error ? error.message : "Could not update home content");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const updateMessageStatus = async (id: number, status: "new" | "read") => {
     if (!token) {
       return;
@@ -298,6 +354,20 @@ function App() {
       )}
 
       {tab === "analytics" && <AnalyticsTab analytics={analytics} />}
+
+      {tab === "home-content" && (
+        <HomeContentTab
+          isLoading={isLoading}
+          landingVideoUrl={landingVideoUrl}
+          storyImageUrl={storyImageUrl}
+          updatedAt={homeContentUpdatedAt}
+          onChangeLandingVideoUrl={setLandingVideoUrl}
+          onChangeStoryImageUrl={setStoryImageUrl}
+          onUploadLandingVideo={(file) => void onUploadHomeAsset(file, "video")}
+          onUploadStoryImage={(file) => void onUploadHomeAsset(file, "image")}
+          onSave={(event) => void onSaveHomeContent(event)}
+        />
+      )}
     </main>
   );
 }
