@@ -21,7 +21,7 @@ export function ProductsPage({
         <p className="eyebrow">Watch Before Order</p>
         <div className="video-card">
           {landingVideoUrl ? (
-            <video autoPlay loop playsInline muted controls>
+            <video autoPlay loop playsInline controls>
               <source src={landingVideoUrl} type="video/mp4" />
             </video>
           ) : (
