@@ -132,7 +132,8 @@ button.ghost {
   text-transform: uppercase;
   letter-spacing: 0.2em;
   font-size: 2.5rem;
-  text-align: center;
+  /* text-align: center; */
+  color: red;
 }
 
 .eyebro {
