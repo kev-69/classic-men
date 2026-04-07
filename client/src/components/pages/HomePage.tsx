@@ -11,7 +11,6 @@ type HomePageProps = {
 
 export function HomePage({
   landingVideoUrl,
-  storyPhotoUrl,
   featuredProducts,
   onViewProducts,
   onExploreAll,
@@ -55,20 +54,6 @@ export function HomePage({
           <h3>Premium Fabrics</h3>
           <p>Comfort-first materials and a clean sharp finish.</p>
         </article>
-      </section>
-
-      <section className="home-story">
-        <div className="home-story-photo">
-          <img src={storyPhotoUrl || "https://placehold.co/800x1000?text=Classic-Men"} alt="Classic-Men story" />
-        </div>
-        <div className="home-story-main">
-          <p className="eyebrow">Why Classic-Men</p>
-          <h2>Built for Men Who Dress with Intention</h2>
-          <p>
-            We focus on refined essentials that transition from weekday confidence to weekend occasions. Every piece is
-            selected to combine comfort, fit, and understated style.
-          </p>
-        </div>
       </section>
 
       <section className="home-process">
@@ -115,7 +100,7 @@ export function HomePage({
                   {product.currency} {product.price.toFixed(2)}
                 </p>
               </div>
-              <button onClick={() => onOpenProductView(product.id)}>View</button>
+              <button onClick={() => onOpenProductView(product.id)}>Order on WhatsApp</button>
             </article>
           ))}
         </div>
