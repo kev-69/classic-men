@@ -24,24 +24,7 @@ export function ContactPage({
   return (
     <main className="page contact-page">
       <section className="contact-layout">
-        <article className="contact-card contact-main">
-          <p className="eyebrow">Let Us Help</p>
-          <h2>Contact Classic-Men</h2>
-          <p>Need help with sizes, stock, or delivery? Send us a quick message and we will respond quickly.</p>
-          <form onSubmit={onSubmitContact}>
-            <label>
-              Name
-              <input value={contactName} onChange={(event) => onContactNameChange(event.target.value)} required />
-            </label>
-            <label>
-              Message
-              <textarea rows={6} value={contactMessage} onChange={(event) => onContactMessageChange(event.target.value)} required />
-            </label>
-            <button type="submit">Send Message</button>
-          </form>
-        </article>
-
-        <aside className="contact-side">
+        <article className="contact-side">
           <article className="contact-card contact-info">
             <h3>Quick Contact</h3>
             <ul className="contact-list">
@@ -72,7 +55,24 @@ export function ContactPage({
               <li>We confirm availability and delivery options.</li>
             </ol>
           </article>
-        </aside>
+        </article>
+
+        <article className="contact-card contact-main">
+          <p className="eyebrow">Let Us Help</p>
+          <h2>Contact Classic-Men</h2>
+          <p>Need help with sizes, stock, or delivery? Send us a quick message and we will respond quickly.</p>
+          <form onSubmit={onSubmitContact}>
+            <label>
+              Name
+              <input value={contactName} onChange={(event) => onContactNameChange(event.target.value)} required />
+            </label>
+            <label>
+              Message
+              <textarea rows={6} value={contactMessage} onChange={(event) => onContactMessageChange(event.target.value)} required />
+            </label>
+            <button type="submit">Send Message</button>
+          </form>
+        </article>
       </section>
     </main>
   );
