@@ -92,7 +92,7 @@ export function ProductModal({
             </label>
 
             <a className="whatsapp" href={whatsappHref} target="_blank" rel="noreferrer">
-              Order via WhatsApp
+              Order Now
             </a>
           </div>
         </div>
