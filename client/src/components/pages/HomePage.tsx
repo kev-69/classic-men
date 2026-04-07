@@ -57,7 +57,7 @@ export function HomePage({
       </section>
 
       <section className="home-process">
-        <p className="eyebrow">Simple Process</p>
+        <p className="eyebro">Simple Process</p>
         <h2>From Browsing to Delivery in 4 Steps</h2>
         <div className="home-process-grid">
           <article>
