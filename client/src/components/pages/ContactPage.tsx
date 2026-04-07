@@ -58,7 +58,7 @@ export function ContactPage({
         </article>
 
         <article className="contact-card contact-main">
-          <p className="eyebrow">Let Us Help</p>
+          <p className="eyebro">Let Us Help</p>
           <h2>Contact Classic-Men</h2>
           <p>Need help with sizes, stock, or delivery? Send us a quick message and we will respond quickly.</p>
           <form onSubmit={onSubmitContact}>
