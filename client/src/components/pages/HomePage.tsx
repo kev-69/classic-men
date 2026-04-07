@@ -20,7 +20,7 @@ export function HomePage({
     <main className="page home-page">
       <section className="hero">
         <div>
-          <p className="eyebrow">Premium Menswear</p>
+          <p className="eyebro">Premium Menswear</p>
           <h1>Timeless Style for Modern Men</h1>
           <p>
             Discover signature attire crafted with premium fabrics and sharp silhouettes. Browse, choose your style,
