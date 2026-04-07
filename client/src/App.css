@@ -135,6 +135,13 @@ button.ghost {
   text-align: center;
 }
 
+.eyebro {
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.75rem;
+}
+
 .hero-actions {
   display: flex;
   gap: 0.6rem;
