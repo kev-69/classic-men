@@ -99,7 +99,7 @@ function App() {
 
     const preFilled = `Hey, I like this ${selectedColor} attire with price ${selectedProduct.currency} ${selectedProduct.price.toFixed(
       2
-    )} and size ${selectedSize}. I would like to purchase. Is it still available and how is delivery?`;
+    )} and size ${selectedSize}. I would like to make my order today.`;
 
     return `https://wa.me/${config.whatsappNumber}?text=${encodeURIComponent(preFilled)}`;
   };
@@ -117,6 +117,17 @@ function App() {
     } catch (error) {
       setStatusMessage(error instanceof Error ? error.message : "Failed to send message");
     }
+  };
+
+  const trackPurchase = () => {
+    if (!selectedProduct) {
+      return;
+    }
+
+    void clientApi.track("PURCHASE", selectedProduct.id, {
+      productName: selectedProduct.name,
+      source: "order-now"
+    });
   };
 
   const landingVideoUrl =
@@ -180,6 +191,7 @@ function App() {
           selectedColor={selectedColor}
           selectedSize={selectedSize}
           whatsappHref={buildWhatsAppOrderLink()}
+          onOrderNow={trackPurchase}
           onClose={() => setSelectedProduct(null)}
           onSelectColor={setSelectedColor}
           onSelectSize={setSelectedSize}
