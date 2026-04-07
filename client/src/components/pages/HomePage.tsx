@@ -43,16 +43,16 @@ export function HomePage({
 
       <section className="home-highlights">
         <article>
-          <h3>Curated Drops</h3>
-          <p>Weekly additions tailored for modern gentlemen.</p>
+          <h3>Payment On Delivery</h3>
+          <p>We only do payment on delivery within Accra on weekends.</p>
         </article>
         <article>
-          <h3>Reliable Delivery</h3>
-          <p>Fast city dispatch with clear updates and support.</p>
+          <h3>RPick Up</h3>
+          <p>You can pick up or send a ride to pick up at Patang - Madina on weekends.</p>
         </article>
         <article>
-          <h3>Premium Fabrics</h3>
-          <p>Comfort-first materials and a clean sharp finish.</p>
+          <h3>Enquiries</h3>
+          <p>Have questions? Our team is here to help you find the perfect fit. Contact 0502321377</p>
         </article>
       </section>
 
