@@ -206,8 +206,11 @@ router.get("/analytics", async (req, res) => {
 
   const days = Number(parsedQuery.data.days);
 
-  const [counts, pageViews, productViews, pageBreakdownRows, productBreakdownRows] = await Promise.all([
-    pool.query("SELECT COUNT(*)::int AS total FROM products"),
+  const [purchaseCount, pageViews, productViews, pageBreakdownRows, productBreakdownRows] = await Promise.all([
+    pool.query(
+      "SELECT COUNT(*)::int AS total FROM analytics_events WHERE event_type = 'PURCHASE' AND created_at >= NOW() - ($1 * INTERVAL '1 day')",
+      [days]
+    ),
     pool.query(
       "SELECT COUNT(*)::int AS total FROM analytics_events WHERE event_type = 'PAGE_VIEW' AND created_at >= NOW() - ($1 * INTERVAL '1 day')",
       [days]
@@ -260,7 +263,7 @@ router.get("/analytics", async (req, res) => {
 
   return res.json({
     days,
-    productCount: counts.rows[0]?.total ?? 0,
+    purchaseCount: purchaseCount.rows[0]?.total ?? 0,
     pageViews: pageViews.rows[0]?.total ?? 0,
     productViews: productViews.rows[0]?.total ?? 0,
     pageBreakdown,
