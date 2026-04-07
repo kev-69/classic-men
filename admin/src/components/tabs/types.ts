@@ -13,7 +13,7 @@ export type ProductDraft = {
 };
 
 export type AnalyticsSummary = {
-  productCount: number;
+  purchaseCount: number;
   pageViews: number;
   productViews: number;
   pageBreakdown: Array<{ page: string; views: number }>;
