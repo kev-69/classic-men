@@ -6,6 +6,7 @@ type ProductModalProps = {
   selectedColor: string;
   selectedSize: string;
   whatsappHref: string;
+  onOrderNow: () => void;
   onClose: () => void;
   onSelectColor: (value: string) => void;
   onSelectSize: (value: string) => void;
@@ -16,6 +17,7 @@ export function ProductModal({
   selectedColor,
   selectedSize,
   whatsappHref,
+  onOrderNow,
   onClose,
   onSelectColor,
   onSelectSize
@@ -91,7 +93,7 @@ export function ProductModal({
               </select>
             </label>
 
-            <a className="whatsapp" href={whatsappHref} target="_blank" rel="noreferrer">
+            <a className="whatsapp" href={whatsappHref} target="_blank" rel="noreferrer" onClick={onOrderNow}>
               Order Now
             </a>
           </div>
