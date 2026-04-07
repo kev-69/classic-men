@@ -1,15 +1,35 @@
 import type { Product } from "../../lib/api";
 
 type ProductsPageProps = {
+  landingVideoUrl: string;
   query: string;
   visibleProducts: Product[];
   onQueryChange: (value: string) => void;
   onOpenProductView: (id: number) => void;
 };
 
-export function ProductsPage({ query, visibleProducts, onQueryChange, onOpenProductView }: ProductsPageProps) {
+export function ProductsPage({
+  landingVideoUrl,
+  query,
+  visibleProducts,
+  onQueryChange,
+  onOpenProductView
+}: ProductsPageProps) {
   return (
     <main className="page products-page">
+      <section className="products-video">
+        <p className="eyebrow">How To Order</p>
+        <div className="video-card">
+          {landingVideoUrl ? (
+            <video autoPlay loop playsInline muted controls>
+              <source src={landingVideoUrl} type="video/mp4" />
+            </video>
+          ) : (
+            <div className="video-placeholder">Landing video not set yet</div>
+          )}
+        </div>
+      </section>
+      
       <section className="section-head products-head">
         <div>
           <h2>Products</h2>
@@ -17,6 +37,7 @@ export function ProductsPage({ query, visibleProducts, onQueryChange, onOpenProd
         </div>
         <input placeholder="Search products" value={query} onChange={(event) => onQueryChange(event.target.value)} />
       </section>
+
       <div className="product-grid">
         {visibleProducts.map((product) => (
           <article key={product.id} className="product-card">
@@ -28,7 +49,7 @@ export function ProductsPage({ query, visibleProducts, onQueryChange, onOpenProd
               </p>
               <small>{product.inStock ? "In stock" : "Out of stock"}</small>
             </div>
-            <button onClick={() => onOpenProductView(product.id)}>View</button>
+            <button onClick={() => onOpenProductView(product.id)}>Order on WhatsApp</button>
           </article>
         ))}
       </div>
