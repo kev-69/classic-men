@@ -25,7 +25,7 @@ export function ProductsPage({
               <source src={landingVideoUrl} type="video/mp4" />
             </video>
           ) : (
-            <div className="video-placeholder">Landing video not set yet</div>
+            <div className="video-placeholder">How To Order Video</div>
           )}
         </div>
       </section>

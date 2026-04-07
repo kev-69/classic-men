@@ -289,8 +289,7 @@ button.ghost {
   display: grid;
 }
 
-.video-card video,
-.video-placeholder {
+.video-card video {
   width: 100%;
   height: 100%;
 }
