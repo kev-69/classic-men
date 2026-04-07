@@ -21,8 +21,8 @@ export function AnalyticsTab({ analytics }: AnalyticsTabProps) {
     <section className="analytics-layout">
       <div className="analytics-grid">
         <article className="panel metric">
-          <h2>Products</h2>
-          <p>{analytics.productCount}</p>
+          <h2>Purchases</h2>
+          <p>{analytics.purchaseCount}</p>
         </article>
         <article className="panel metric">
           <h2>Total Page Views</h2>
