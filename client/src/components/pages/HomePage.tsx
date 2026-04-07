@@ -47,7 +47,7 @@ export function HomePage({
           <p>We only do payment on delivery within Accra on weekends.</p>
         </article>
         <article>
-          <h3>RPick Up</h3>
+          <h3>Pick Up</h3>
           <p>You can pick up or send a ride to pick up at Patang - Madina on weekends.</p>
         </article>
         <article>
