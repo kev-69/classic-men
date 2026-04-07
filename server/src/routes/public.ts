@@ -11,7 +11,7 @@ const contactSchema = z.object({
 });
 
 const analyticsSchema = z.object({
-  eventType: z.enum(["PAGE_VIEW", "PRODUCT_VIEW"]),
+  eventType: z.enum(["PAGE_VIEW", "PRODUCT_VIEW", "PURCHASE"]),
   productId: z.number().int().positive().optional(),
   metadata: z.record(z.string(), z.unknown()).optional()
 });
