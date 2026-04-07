@@ -15,12 +15,9 @@ type HomeContentTabProps = {
 export function HomeContentTab({
   isLoading,
   landingVideoUrl,
-  storyImageUrl,
   updatedAt,
   onChangeLandingVideoUrl,
-  onChangeStoryImageUrl,
   onUploadLandingVideo,
-  onUploadStoryImage,
   onSave
 }: HomeContentTabProps) {
   return (
@@ -42,21 +39,6 @@ export function HomeContentTab({
         <label className="upload-field">
           Or upload landing video
           <input type="file" accept="video/*" onChange={(event) => onUploadLandingVideo(event.target.files?.[0] ?? null)} />
-        </label>
-
-        <label>
-          Home Story Photo URL
-          <input
-            type="url"
-            placeholder="https://res.cloudinary.com/.../image/upload/...jpg"
-            value={storyImageUrl}
-            onChange={(event) => onChangeStoryImageUrl(event.target.value)}
-          />
-        </label>
-
-        <label className="upload-field">
-          Or upload story image
-          <input type="file" accept="image/*" onChange={(event) => onUploadStoryImage(event.target.files?.[0] ?? null)} />
         </label>
 
         <button type="submit" disabled={isLoading}>
