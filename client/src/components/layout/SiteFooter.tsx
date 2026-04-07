@@ -5,7 +5,7 @@ export function SiteFooter() {
       <p>© {new Date().getFullYear()} Classic Men</p>
       
       <div className="social-icons">
-        <a href="https://www.instagram.com/casual_men_fit?igsh=MThkdDJxdTJ3Z2oxMQ==/" target="_blank" rel="noopener noreferrer" className="social-icon">
+        <a href="https://www.instagram.com/casual_mens_fit?igsh=MThkdDJxdTJ3Z2oxMQ==" target="_blank" rel="noopener noreferrer" className="social-icon">
           Instagram
         </a>
       </div>
