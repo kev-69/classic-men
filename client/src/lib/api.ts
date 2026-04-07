@@ -70,7 +70,7 @@ export const clientApi = {
     return parseJson<{ message: string }>(response);
   },
 
-  async track(eventType: "PAGE_VIEW" | "PRODUCT_VIEW", productId?: number, metadata?: Record<string, unknown>) {
+  async track(eventType: "PAGE_VIEW" | "PRODUCT_VIEW" | "PURCHASE", productId?: number, metadata?: Record<string, unknown>) {
     await fetch(`${API_BASE}/analytics`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
