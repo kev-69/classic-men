@@ -36,7 +36,7 @@ export function HomePage({
               <source src={landingVideoUrl} type="video/mp4" />
             </video>
           ) : (
-            <div className="video-placeholder">Upload your how-to-order video in admin</div>
+            <div className="video-placeholder">How To Order Video</div>
           )}
         </div>
       </section>
