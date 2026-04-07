@@ -30,7 +30,7 @@ export type ContactMessage = {
 };
 
 export type AnalyticsResponse = {
-  productCount: number;
+  purchaseCount: number;
   pageViews: number;
   productViews: number;
   pageBreakdown: Array<{ page: string; views: number }>;
