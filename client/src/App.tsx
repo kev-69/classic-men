@@ -155,6 +155,7 @@ function App() {
 
       {page === "products" && (
         <ProductsPage
+          landingVideoUrl={landingVideoUrl}
           query={query}
           visibleProducts={visibleProducts}
           onQueryChange={setQuery}
