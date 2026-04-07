@@ -34,7 +34,7 @@ function App() {
   const [products, setProducts] = useState<Product[]>([]);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [analytics, setAnalytics] = useState<AnalyticsSummary>({
-    productCount: 0,
+    purchaseCount: 0,
     pageViews: 0,
     productViews: 0,
     pageBreakdown: [],
