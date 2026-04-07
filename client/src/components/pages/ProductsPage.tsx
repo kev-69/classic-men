@@ -18,7 +18,7 @@ export function ProductsPage({
   return (
     <main className="page products-page">
       <section className="products-video">
-        <p className="eyebrow">How To Order</p>
+        <p className="eyebrow">Watch Before Order</p>
         <div className="video-card">
           {landingVideoUrl ? (
             <video autoPlay loop playsInline muted controls>
